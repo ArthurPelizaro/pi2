@@ -11,6 +11,27 @@ const st = require('./data/bd_st.js');
 app.set('views', './views');
 app.set('view engine', 'pug');
 
+// Middleware para adicionar dados das séries a todas as respostas
+app.use((req, res, next) => {
+    res.locals.bbt = bbt;
+    res.locals.sn = sn;
+    res.locals.st = st;
+    next();
+});
+
+// Rota para a página inicial
+app.get('/', (req, res) => {
+    // Combine todos os dados das séries em um único objeto
+    const allShows = {
+        bbt: bbt,
+        sn: sn,
+        st: st
+    };
+
+    // Renderize a visualização 'home' com todos os dados das séries
+    res.render('home', allShows);
+});
+
 // Rota para a série Big Bang Theory
 app.get('/bbt', (req, res) => {
     res.render('index', bbt);
